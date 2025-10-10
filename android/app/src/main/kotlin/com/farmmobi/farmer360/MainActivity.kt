@@ -1,0 +1,5 @@
+package com.farmmobi.farmer360
+
+import io.flutter.embedding.android.FlutterActivity
+
+class MainActivity : FlutterActivity()
