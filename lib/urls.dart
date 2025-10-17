@@ -1,5 +1,5 @@
 class Url {
- //static String baseUrl = "http://192.168.1.47:8000/api";
+ // static String baseUrl = "http://192.168.1.51:8000/api";
  //  static String baseUrl = "http://13.203.210.229:8000/api";
 
   //http://13.200.231.209:8000

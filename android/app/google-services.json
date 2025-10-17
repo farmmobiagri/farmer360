@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "732261515411",
+    "firebase_url": "https://procurement-bd262-default-rtdb.firebaseio.com",
+    "project_id": "procurement-bd262",
+    "storage_bucket": "procurement-bd262.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:732261515411:android:e137dfe1e764ac45e74d66",
+        "android_client_info": {
+          "package_name": "com.farmmobi.farmer360"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAwtMUk6WqASqu08YlH5E82iHbHcBcGpl4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:732261515411:android:74ecb90c3efd808ae74d66",
+        "android_client_info": {
+          "package_name": "com.farmmobi.procurement"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAwtMUk6WqASqu08YlH5E82iHbHcBcGpl4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:732261515411:android:ceb304f37158147ee74d66",
+        "android_client_info": {
+          "package_name": "com.farmmobi.seedproduction"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAwtMUk6WqASqu08YlH5E82iHbHcBcGpl4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

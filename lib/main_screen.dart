@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:agripromoter/main.dart' as agripromoter;
 import 'package:android_intent_plus/android_intent.dart';
 import 'package:farmer360/login.dart';
 import 'package:farmer360/utils/api_service.dart';
@@ -9,6 +10,8 @@ import 'package:flutter/services.dart';
 import 'package:installed_apps/app_info.dart';
 import 'package:installed_apps/installed_apps.dart';
 import 'package:ota_update/ota_update.dart';
+import 'package:procurement/app.dart' as procurementApp;
+import 'package:procurement/flavors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:version/version.dart'; // add
 
@@ -29,10 +32,14 @@ class _MainScreenState extends State<MainScreen> {
   int? installingIndex;
   String? installStatus;
   String userName = "";
+  String selectedApp = "";
 
   @override
   void initState() {
     super.initState();
+
+    F.appFlavor = Flavor.procurement;
+
     getApps();
   }
 
@@ -241,150 +248,251 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("FarmMobi 360"),
+        title: Image.asset("assets/golden_agri_inputs.jpeg", height: 50),
         actions: [
           TextButton(
             onPressed: () async {
-              await showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: Text("Are you sure wants to logout?"),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: Text("Close"),
-                    ),
-                    MaterialButton(
-                      onPressed: () async {
-                        await widget.prefs.clear();
-                        if (context.mounted) {
-                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LoginPage(prefs: widget.prefs)), (route) => false);
-                        }
-                      },
-                      child: Text("Logout"),
-                    ),
-                  ],
-                ),
-              );
+              String userId = widget.prefs.getString("userId") ?? "";
+              if (selectedApp.isEmpty) {
+                await showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: Text("Are you sure wants to logout?"),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text("Close"),
+                      ),
+                      MaterialButton(
+                        onPressed: () async {
+                          await widget.prefs.clear();
+                          if (context.mounted) {
+                            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LoginPage(prefs: widget.prefs)), (route) => false);
+                          }
+                        },
+                        child: Text("Logout"),
+                      ),
+                    ],
+                  ),
+                );
+              } else {
+                await widget.prefs.clear();
+                selectedApp = "";
+                await widget.prefs.setString("userId", userId);
+                setState(() {});
+              }
             },
-            child: Icon(Icons.logout),
+            child: Icon(selectedApp.isEmpty ? Icons.logout : Icons.home),
           ),
         ],
       ),
-
-      body: loading
+      body: selectedApp.isNotEmpty
+          ? selectedApp == "Procurement" || selectedApp == "Seed Production"
+                ? procurementApp.App()
+                : agripromoter.MyApp()
+          : loading
           ? const Center(child: CircularProgressIndicator())
           : appList.isNotEmpty
-          ? Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: SizedBox(
+          ? false
+                ? Column(
+                    children: [
+                      SizedBox(
                         width: double.infinity,
-                        child: Text("User name: $userName", softWrap: true, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center,),
-                      ),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: ListView.separated(
-                    itemCount: appList.length,
-                    separatorBuilder: (_, __) => const Divider(height: 1),
-                    itemBuilder: (context, index) {
-                      final item = appList[index];
-                      final Uint8List? iconBytes = item["icon"] as Uint8List?;
-                      final String title = item["appName"] as String? ?? "";
-                      final String apiVersion = (item["apkVersion"] as String? ?? "").trim();
-                      final String versionName = (item["versionName"] as String? ?? "").trim();
-                      final String packageName = (item["packageName"] as String? ?? "").trim();
-                      final bool isInstalling = installingIndex == index;
-
-                      final Version? latest = _parseVersion(apiVersion);
-                      final Version? installed = _parseVersion(versionName);
-
-                      // Correct hasUpdate: only if both parse and latest > installed
-                      final bool hasUpdate = (latest != null && installed != null && latest > installed);
-
-                      final bool isInstalled = packageName.isNotEmpty;
-
-                      String subtitleText;
-                      Color subtitleColor;
-
-                      if (isInstalling) {
-                        subtitleText = installStatus ?? "Installing…";
-                        subtitleText = subtitleText.replaceAll("OtaStatus.", "");
-                        subtitleColor = Colors.orange;
-                      } else if (isInstalled) {
-                        if (hasUpdate) {
-                          subtitleText = "Installed: $versionName  •  Latest: $apiVersion";
-                          subtitleColor = Colors.blueAccent;
-                        } else {
-                          subtitleText = versionName.isNotEmpty ? "v$versionName" : "Installed";
-                          subtitleColor = Colors.black54;
-                        }
-                      } else {
-                        subtitleText = apiVersion.isNotEmpty ? "Latest: $apiVersion" : "Not installed";
-                        subtitleColor = Colors.redAccent;
-                      }
-
-                      return ListTile(
-                        leading: iconBytes != null && iconBytes.isNotEmpty
-                            ? ClipRRect(
-                                borderRadius: BorderRadius.circular(8),
-                                child: Image.memory(iconBytes, width: 56, height: 56, fit: BoxFit.cover, errorBuilder: (_, __, ___) => const Icon(Icons.apps, size: 56)),
-                              )
-                            : const Icon(Icons.apps, size: 48),
-                        title: Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                title,
-                                style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            _statusChip(installed: isInstalled, hasUpdate: hasUpdate),
-                          ],
+                        child: MaterialButton(
+                          onPressed: () {
+                            setState(() {
+                              selectedApp = "Procurement";
+                            });
+                          },
+                          child: Text("Procurement"),
                         ),
-                        subtitle: Text(subtitleText, style: TextStyle(color: subtitleColor)),
-                        trailing: isInstalling
-                            ? const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2))
-                            : Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  if (!isInstalled) IconButton(icon: const Icon(Icons.download), tooltip: "Install", onPressed: () => _downloadAndInstallApk(index), color: Colors.redAccent),
-                                  if (isInstalled && hasUpdate) IconButton(icon: const Icon(Icons.system_update), tooltip: "Update", onPressed: () => _downloadAndInstallApk(index), color: Colors.blue),
-                                  if (isInstalled) IconButton(icon: const Icon(Icons.open_in_new), tooltip: "Open", onPressed: () => _handleTap(index)),
-                                ],
-                              ),
-                        onTap: isInstalling
-                            ? null
-                            : () {
-                                if (isInstalled && !hasUpdate) {
-                                  _handleTap(index);
-                                } else if (!isInstalled) {
-                                  _downloadAndInstallApk(index);
-                                }
-                                // If update is available, prefer explicit Update button
-                              },
-                      );
-                    },
-                  ),
-                ),
+                      ),
 
-                Padding(
-                  padding: const EdgeInsets.only(left: 32.0,right: 32, bottom: 16),
-                  child: Image.asset("assets/fman1.png"),
-                )
-              ],
-            )
+                      SizedBox(
+                        width: double.infinity,
+                        child: MaterialButton(
+                          onPressed: () {
+                            setState(() {
+                              selectedApp = "Procurement";
+                            });
+                          },
+                          child: Text("Procurement"),
+                        ),
+                      ),
+
+                      Divider(),
+                      SizedBox(
+                        width: double.infinity,
+                        child: MaterialButton(
+                          onPressed: () {
+                            setState(() {
+                              selectedApp = "Agri Promoter";
+                            });
+                          },
+                          child: Text("Agri Promoter"),
+                        ),
+                      ),
+                    ],
+                  )
+                : Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: SizedBox(
+                              width: double.infinity,
+                              child: Text("User name: $userName", softWrap: true, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: ListView.separated(
+                          itemCount: appList.length,
+                          separatorBuilder: (_, __) => const Divider(height: 1),
+                          itemBuilder: (context, index) {
+                            final item = appList[index];
+                            final Uint8List? iconBytes = item["icon"] as Uint8List?;
+                            final String title = item["appName"] as String? ?? "";
+                            final String apiVersion = (item["apkVersion"] as String? ?? "").trim();
+                            final String versionName = (item["versionName"] as String? ?? "").trim();
+                            final String packageName = (item["packageName"] as String? ?? "").trim();
+                            final bool isInstalling = installingIndex == index;
+
+                            final Version? latest = _parseVersion(apiVersion);
+                            final Version? installed = _parseVersion(versionName);
+
+                            // Correct hasUpdate: only if both parse and latest > installed
+                            final bool hasUpdate = (latest != null && installed != null && latest > installed);
+
+                            final bool isInstalled = packageName.isNotEmpty;
+
+                            String subtitleText = "";
+                            Color subtitleColor = Colors.black54;
+
+                            if (isInstalling) {
+                              subtitleText = installStatus ?? "Installing…";
+                              subtitleText = subtitleText.replaceAll("OtaStatus.", "");
+                              subtitleColor = Colors.orange;
+                            } else if (isInstalled) {
+                              if (hasUpdate) {
+                                // subtitleText = "Installed: $versionName  •  Latest: $apiVersion";
+                                subtitleColor = Colors.blueAccent;
+                              } else {
+                                subtitleText = versionName.isNotEmpty ? "v$versionName" : "Installed";
+                                subtitleColor = Colors.black54;
+                              }
+                            } else {
+                              // subtitleText = apiVersion.isNotEmpty ? "Latest: $apiVersion" : "Not installed";
+                              // subtitleColor = Colors.redAccent;
+                            }
+
+                            return Card(
+                              child: Theme(
+                                data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+                                child: GestureDetector(
+                                  onTap: true
+                                      ? () async {
+
+                                    final item = appList[index];
+                                    final String userName = item["userName"] ?? "";
+                                    final String token = item["Token"] ?? item["token"] ?? "";
+                                    String packageName = (item["packageName"] as String?)?.trim() ?? "";
+                                    String baseUrl = (item["baseUrl"] as String?)?.trim() ?? "";
+                                    final Map<String, String>? deeplink = (item["deeplink"] as Map?)?.map((k, v) => MapEntry(k.toString(), v.toString()));
+
+                                    // Always set clipboard payload on tap, before branching
+                                    await _copyLoginPayload(baseUrl: baseUrl, token: token);
+
+                                    setState(() {
+                                            if (title == "Procurement") {
+                                              F.appFlavor = Flavor.procurement;
+                                            } else if (title == "Seed Production") {
+                                              F.appFlavor = Flavor.seedproduction;
+                                            }
+                                            selectedApp = title;
+                                          });
+                                        }
+                                      : isInstalling
+                                      ? null
+                                      : () {
+                                          if (isInstalled && !hasUpdate) {
+                                            _handleTap(index);
+                                          } else if (!isInstalled) {
+                                            _downloadAndInstallApk(index);
+                                          }
+                                          // If update is available, prefer explicit Update button
+                                        },
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          if (iconBytes != null && iconBytes.isNotEmpty) ...[
+                                            ClipRRect(
+                                              borderRadius: BorderRadius.circular(8),
+                                              child: Image.memory(iconBytes, width: 56, height: 56, fit: BoxFit.cover, errorBuilder: (_, __, ___) => const Icon(Icons.apps, size: 56)),
+                                            ),
+                                          ],
+
+                                          Expanded(
+                                            child: Text(
+                                              title,
+                                              style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+
+                                    // leading: iconBytes != null && iconBytes.isNotEmpty
+                                    //     ? ClipRRect(
+                                    //         borderRadius: BorderRadius.circular(8),
+                                    //         child: Image.memory(iconBytes, width: 56, height: 56, fit: BoxFit.cover, errorBuilder: (_, __, ___) => const Icon(Icons.apps, size: 56)),
+                                    //       )
+                                    //     : const Icon(Icons.apps, size: 48),
+                                    // title: Row(
+                                    //   children: [
+                                    //     Expanded(
+                                    //       child: Text(
+                                    //         title,
+                                    //         style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                                    //         maxLines: 1,
+                                    //         overflow: TextOverflow.ellipsis,
+                                    //       ),
+                                    //     ), // const SizedBox(width: 8),
+                                    //     // _statusChip(installed: isInstalled, hasUpdate: hasUpdate),
+                                    //   ],
+                                    // ),
+                                    // subtitle: Text(subtitleText, style: TextStyle(color: subtitleColor)),
+                                    // trailing: true
+                                    //     ? null
+                                    //     : isInstalling
+                                    //     ? const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2))
+                                    //     : Row(
+                                    //         mainAxisSize: MainAxisSize.min,
+                                    //         children: [
+                                    //           if (!isInstalled) IconButton(icon: const Icon(Icons.download), tooltip: "Install", onPressed: () => _downloadAndInstallApk(index), color: Colors.redAccent),
+                                    //           if (isInstalled && hasUpdate) IconButton(icon: const Icon(Icons.system_update), tooltip: "Update", onPressed: () => _downloadAndInstallApk(index), color: Colors.blue),
+                                    //           if (isInstalled) IconButton(icon: const Icon(Icons.open_in_new), tooltip: "Open", onPressed: () => _handleTap(index)),
+                                    //         ],
+                                    //       ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+
+                      Padding(padding: const EdgeInsets.only(left: 32.0, right: 32, bottom: 16), child: Image.asset("assets/fman1.png")),
+                    ],
+                  )
           : Center(
               child: TextButton(onPressed: () => getApps(loading: true), child: const Text("Retry")),
             ),

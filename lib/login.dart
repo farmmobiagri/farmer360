@@ -23,7 +23,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void initState() {
-    if (Url.baseUrl == "http://192.168.1.48:8000/api") {
+    if (Url.baseUrl == "http://192.168.1.51:8000/api") {
       organizationController.text = "1";
       emailController.text = "dhiraj";
       passwordController.text = "Admin@2023";

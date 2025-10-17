@@ -61,6 +61,9 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+
+        <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyBZRgHFgdqNBIdzaeEH7_lyZT7EiZrkaxA"/>
+
     </application>
 
     <!-- Package visibility (keep existing). Add more <queries> if pre-checking other apps. -->
