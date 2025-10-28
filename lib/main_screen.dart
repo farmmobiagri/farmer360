@@ -249,7 +249,7 @@ class _MainScreenState extends State<MainScreen> {
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: AssetImage("assets/leaf.jpeg"), // Your image path
+          image: AssetImage("assets/bkg.jpg"), // Your image path
           fit: BoxFit.cover, // Adjust how the image fits the container
         ),
       ),
@@ -307,223 +307,226 @@ class _MainScreenState extends State<MainScreen> {
             ],
           ],
         ),
-        body: selectedApp.isNotEmpty
-            ? selectedApp == "FMAN" || selectedApp == "Seed Production"
-            ? procurementApp.App()
-            : agripromoter.MyApp(isShowLogout: false,)
-            : loading
-            ? const Center(child: CircularProgressIndicator())
-            : appList.isNotEmpty
-            ? false
-            ? Column(
-          children: [
-            SizedBox(
-              width: double.infinity,
-              child: MaterialButton(
-                onPressed: () {
-                  setState(() {
-                    selectedApp = "Procurement";
-                  });
-                },
-                child: Text("Procurement"),
+        body: Container(
+          color: Colors.white38,
+          child: selectedApp.isNotEmpty
+              ? selectedApp == "FMAN" || selectedApp == "Seed Production"
+              ? procurementApp.App()
+              : agripromoter.MyApp(isShowLogout: false,)
+              : loading
+              ? const Center(child: CircularProgressIndicator())
+              : appList.isNotEmpty
+              ? false
+              ? Column(
+            children: [
+              SizedBox(
+                width: double.infinity,
+                child: MaterialButton(
+                  onPressed: () {
+                    setState(() {
+                      selectedApp = "Procurement";
+                    });
+                  },
+                  child: Text("Procurement"),
+                ),
               ),
-            ),
 
-            SizedBox(
-              width: double.infinity,
-              child: MaterialButton(
-                onPressed: () {
-                  setState(() {
-                    selectedApp = "Procurement";
-                  });
-                },
-                child: Text("Procurement"),
+              SizedBox(
+                width: double.infinity,
+                child: MaterialButton(
+                  onPressed: () {
+                    setState(() {
+                      selectedApp = "Procurement";
+                    });
+                  },
+                  child: Text("Procurement"),
+                ),
               ),
-            ),
 
-            Divider(),
-            SizedBox(
-              width: double.infinity,
-              child: MaterialButton(
-                onPressed: () {
-                  setState(() {
-                    selectedApp = "Agri Promoter";
-                  });
-                },
-                child: Text("Agri Promoter"),
+              Divider(),
+              SizedBox(
+                width: double.infinity,
+                child: MaterialButton(
+                  onPressed: () {
+                    setState(() {
+                      selectedApp = "Agri Promoter";
+                    });
+                  },
+                  child: Text("Agri Promoter"),
+                ),
               ),
-            ),
-          ],
-        )
-            : Stack(
-          children: [
-            Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Card(
-                    color: Colors.white60,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: SizedBox(
-                        width: double.infinity,
-                        child: Text("User name: $userName", softWrap: true, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center),
+            ],
+          )
+              : Stack(
+            children: [
+              Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Card(
+                      color: Colors.white60,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: Text("User name: $userName", softWrap: true, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center),
+                        ),
                       ),
                     ),
                   ),
-                ),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: appList.length,
-                    itemBuilder: (context, index) {
-                      final item = appList[index];
-                      final Uint8List? iconBytes = item["icon"] as Uint8List?;
-                      final String title = item["appName"] as String? ?? "";
-                      final String apiVersion = (item["apkVersion"] as String? ?? "").trim();
-                      final String versionName = (item["versionName"] as String? ?? "").trim();
-                      final String packageName = (item["packageName"] as String? ?? "").trim();
-                      final bool isInstalling = installingIndex == index;
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: appList.length,
+                      itemBuilder: (context, index) {
+                        final item = appList[index];
+                        final Uint8List? iconBytes = item["icon"] as Uint8List?;
+                        final String title = item["appName"] as String? ?? "";
+                        final String apiVersion = (item["apkVersion"] as String? ?? "").trim();
+                        final String versionName = (item["versionName"] as String? ?? "").trim();
+                        final String packageName = (item["packageName"] as String? ?? "").trim();
+                        final bool isInstalling = installingIndex == index;
 
-                      final Version? latest = _parseVersion(apiVersion);
-                      final Version? installed = _parseVersion(versionName);
+                        final Version? latest = _parseVersion(apiVersion);
+                        final Version? installed = _parseVersion(versionName);
 
-                      // Correct hasUpdate: only if both parse and latest > installed
-                      final bool hasUpdate = (latest != null && installed != null && latest > installed);
+                        // Correct hasUpdate: only if both parse and latest > installed
+                        final bool hasUpdate = (latest != null && installed != null && latest > installed);
 
-                      final bool isInstalled = packageName.isNotEmpty;
+                        final bool isInstalled = packageName.isNotEmpty;
 
-                      String subtitleText = "";
-                      Color subtitleColor = Colors.black54;
+                        String subtitleText = "";
+                        Color subtitleColor = Colors.black54;
 
-                      if (isInstalling) {
-                        subtitleText = installStatus ?? "Installing…";
-                        subtitleText = subtitleText.replaceAll("OtaStatus.", "");
-                        subtitleColor = Colors.orange;
-                      } else if (isInstalled) {
-                        if (hasUpdate) {
-                          // subtitleText = "Installed: $versionName  •  Latest: $apiVersion";
-                          subtitleColor = Colors.blueAccent;
+                        if (isInstalling) {
+                          subtitleText = installStatus ?? "Installing…";
+                          subtitleText = subtitleText.replaceAll("OtaStatus.", "");
+                          subtitleColor = Colors.orange;
+                        } else if (isInstalled) {
+                          if (hasUpdate) {
+                            // subtitleText = "Installed: $versionName  •  Latest: $apiVersion";
+                            subtitleColor = Colors.blueAccent;
+                          } else {
+                            subtitleText = versionName.isNotEmpty ? "v$versionName" : "Installed";
+                            subtitleColor = Colors.black54;
+                          }
                         } else {
-                          subtitleText = versionName.isNotEmpty ? "v$versionName" : "Installed";
-                          subtitleColor = Colors.black54;
+                          // subtitleText = apiVersion.isNotEmpty ? "Latest: $apiVersion" : "Not installed";
+                          // subtitleColor = Colors.redAccent;
                         }
-                      } else {
-                        // subtitleText = apiVersion.isNotEmpty ? "Latest: $apiVersion" : "Not installed";
-                        // subtitleColor = Colors.redAccent;
-                      }
 
-                      return Card(
-                        color: Colors.white54,
-                        child: Theme(
-                          data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
-                          child: GestureDetector(
-                            onTap: true
-                                ? () async {
-                              final item = appList[index];
-                              final String userName = item["userName"] ?? "";
-                              final String token = item["Token"] ?? item["token"] ?? "";
-                              String packageName = (item["packageName"] as String?)?.trim() ?? "";
-                              String baseUrl = (item["baseUrl"] as String?)?.trim() ?? "";
-                              final Map<String, String>? deeplink = (item["deeplink"] as Map?)?.map((k, v) => MapEntry(k.toString(), v.toString()));
+                        return Card(
+                          color: Colors.white54,
+                          child: Theme(
+                            data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+                            child: GestureDetector(
+                              onTap: true
+                                  ? () async {
+                                final item = appList[index];
+                                final String userName = item["userName"] ?? "";
+                                final String token = item["Token"] ?? item["token"] ?? "";
+                                String packageName = (item["packageName"] as String?)?.trim() ?? "";
+                                String baseUrl = (item["baseUrl"] as String?)?.trim() ?? "";
+                                final Map<String, String>? deeplink = (item["deeplink"] as Map?)?.map((k, v) => MapEntry(k.toString(), v.toString()));
 
-                              // Always set clipboard payload on tap, before branching
-                              await _copyLoginPayload(baseUrl: baseUrl, token: token);
+                                // Always set clipboard payload on tap, before branching
+                                await _copyLoginPayload(baseUrl: baseUrl, token: token);
 
-                              setState(() {
-                                if (title == "FMAN") {
-                                  F.appFlavor = Flavor.procurement;
-                                } else if (title == "Seed Production") {
-                                  F.appFlavor = Flavor.seedproduction;
-                                }
-                                selectedApp = title;
-                              });
-                            }
-                                : isInstalling
-                                ? null
-                                : () {
-                              if (isInstalled && !hasUpdate) {
-                                _handleTap(index);
-                              } else if (!isInstalled) {
-                                _downloadAndInstallApk(index);
+                                setState(() {
+                                  if (title == "FMAN") {
+                                    F.appFlavor = Flavor.procurement;
+                                  } else if (title == "Seed Production") {
+                                    F.appFlavor = Flavor.seedproduction;
+                                  }
+                                  selectedApp = title;
+                                });
                               }
-                              // If update is available, prefer explicit Update button
-                            },
-                            child: Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    // if (iconBytes != null && iconBytes.isNotEmpty) ...[
-                                    // ],
+                                  : isInstalling
+                                  ? null
+                                  : () {
+                                if (isInstalled && !hasUpdate) {
+                                  _handleTap(index);
+                                } else if (!isInstalled) {
+                                  _downloadAndInstallApk(index);
+                                }
+                                // If update is available, prefer explicit Update button
+                              },
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      // if (iconBytes != null && iconBytes.isNotEmpty) ...[
+                                      // ],
 
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(8),
-                                      child: Image.asset("assets/ic_launcher.png", width: 56, height: 56, fit: BoxFit.cover, errorBuilder: (_, __, ___) => const Icon(Icons.apps, size: 56)),
-                                    ),
-
-                                    Expanded(
-                                      child: Text(
-                                        title,
-                                        style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(8),
+                                        child: Image.asset("assets/ic_launcher.png", width: 56, height: 56, fit: BoxFit.cover, errorBuilder: (_, __, ___) => const Icon(Icons.apps, size: 56)),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ],
 
-                              // leading: iconBytes != null && iconBytes.isNotEmpty
-                              //     ? ClipRRect(
-                              //         borderRadius: BorderRadius.circular(8),
-                              //         child: Image.memory(iconBytes, width: 56, height: 56, fit: BoxFit.cover, errorBuilder: (_, __, ___) => const Icon(Icons.apps, size: 56)),
-                              //       )
-                              //     : const Icon(Icons.apps, size: 48),
-                              // title: Row(
-                              //   children: [
-                              //     Expanded(
-                              //       child: Text(
-                              //         title,
-                              //         style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-                              //         maxLines: 1,
-                              //         overflow: TextOverflow.ellipsis,
-                              //       ),
-                              //     ), // const SizedBox(width: 8),
-                              //     // _statusChip(installed: isInstalled, hasUpdate: hasUpdate),
-                              //   ],
-                              // ),
-                              // subtitle: Text(subtitleText, style: TextStyle(color: subtitleColor)),
-                              // trailing: true
-                              //     ? null
-                              //     : isInstalling
-                              //     ? const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2))
-                              //     : Row(
-                              //         mainAxisSize: MainAxisSize.min,
-                              //         children: [
-                              //           if (!isInstalled) IconButton(icon: const Icon(Icons.download), tooltip: "Install", onPressed: () => _downloadAndInstallApk(index), color: Colors.redAccent),
-                              //           if (isInstalled && hasUpdate) IconButton(icon: const Icon(Icons.system_update), tooltip: "Update", onPressed: () => _downloadAndInstallApk(index), color: Colors.blue),
-                              //           if (isInstalled) IconButton(icon: const Icon(Icons.open_in_new), tooltip: "Open", onPressed: () => _handleTap(index)),
-                              //         ],
-                              //       ),
+                                      Expanded(
+                                        child: Text(
+                                          title,
+                                          style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+
+                                // leading: iconBytes != null && iconBytes.isNotEmpty
+                                //     ? ClipRRect(
+                                //         borderRadius: BorderRadius.circular(8),
+                                //         child: Image.memory(iconBytes, width: 56, height: 56, fit: BoxFit.cover, errorBuilder: (_, __, ___) => const Icon(Icons.apps, size: 56)),
+                                //       )
+                                //     : const Icon(Icons.apps, size: 48),
+                                // title: Row(
+                                //   children: [
+                                //     Expanded(
+                                //       child: Text(
+                                //         title,
+                                //         style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                                //         maxLines: 1,
+                                //         overflow: TextOverflow.ellipsis,
+                                //       ),
+                                //     ), // const SizedBox(width: 8),
+                                //     // _statusChip(installed: isInstalled, hasUpdate: hasUpdate),
+                                //   ],
+                                // ),
+                                // subtitle: Text(subtitleText, style: TextStyle(color: subtitleColor)),
+                                // trailing: true
+                                //     ? null
+                                //     : isInstalling
+                                //     ? const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2))
+                                //     : Row(
+                                //         mainAxisSize: MainAxisSize.min,
+                                //         children: [
+                                //           if (!isInstalled) IconButton(icon: const Icon(Icons.download), tooltip: "Install", onPressed: () => _downloadAndInstallApk(index), color: Colors.redAccent),
+                                //           if (isInstalled && hasUpdate) IconButton(icon: const Icon(Icons.system_update), tooltip: "Update", onPressed: () => _downloadAndInstallApk(index), color: Colors.blue),
+                                //           if (isInstalled) IconButton(icon: const Icon(Icons.open_in_new), tooltip: "Open", onPressed: () => _handleTap(index)),
+                                //         ],
+                                //       ),
+                              ),
                             ),
                           ),
-                        ),
-                      );
-                    },
+                        );
+                      },
+                    ),
                   ),
-                ),
 
-                Padding(padding: const EdgeInsets.only(left: 32.0, right: 32, bottom: 16), child: Column(
-                  children: [
-                    // Image.asset("assets/fman1.png", width: 170, height: 90,),
-                    Text("Powered by FarmMobi", style: TextStyle(color: Colors.white),)
-                  ],
-                )),
-              ],
-            ),
-          ],
-        )
-            : Center(
-          child: TextButton(onPressed: () => getApps(loading: true), child: const Text("Retry")),
+                  Padding(padding: const EdgeInsets.only(left: 32.0, right: 32, bottom: 16), child: Column(
+                    children: [
+                      // Image.asset("assets/fman1.png", width: 170, height: 90,),
+                      Text("Powered by FarmMobi", style: TextStyle(color: Colors.black),)
+                    ],
+                  )),
+                ],
+              ),
+            ],
+          )
+              : Center(
+            child: TextButton(onPressed: () => getApps(loading: true), child: const Text("Retry")),
+          ),
         ),
       ),
     );

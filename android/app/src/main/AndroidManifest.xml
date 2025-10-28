@@ -10,7 +10,7 @@
 
     <application
         android:name="${applicationName}"
-        android:label="GAIL 360"
+        android:label="GAIL360"
         android:icon="@mipmap/ic_launcher">
 
         <activity
