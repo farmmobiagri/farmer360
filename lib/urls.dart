@@ -3,7 +3,9 @@ class Url {
  //  static String baseUrl = "http://13.203.210.229:8000/api";
 
   //http://13.200.231.209:8000
-  static String baseUrl = "http://13.200.231.209:8000/api";
+  // static String baseUrl = "http://13.200.231.209:8000/api";
+  static String baseUrl = "https://devfmanapi.farmmobi.com/api";
+
   // http://127.0.0.1:8000/api/tokenNew/?userId=90
   // https://teams.microsoft.com/l/message/19:meeting_YzM4Yzc2NTYtMjBkMy00MzRhLTg3YzktYzBkNTg4OGRhMTI0@thread.v2/1756353615565?context=%7B%22contextType%22%3A%22chat%22%7D
   // static String baseUrl = "http://3.110.154.53:8000/api/";

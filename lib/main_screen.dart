@@ -33,6 +33,7 @@ class _MainScreenState extends State<MainScreen> {
   String? installStatus;
   String userName = "";
   String selectedApp = "";
+  String selectedUseCase = "";
 
   @override
   void initState() {
@@ -309,9 +310,23 @@ class _MainScreenState extends State<MainScreen> {
         ),
         body: Container(
           color: Colors.white38,
+
+
+
+            // if (title == "FMAN" || title == "Value Chain Development(VCD)") {
+            //   F.appFlavor = Flavor.procurement;
+            //   } else if (title == "Seed Production") {
+            //   F.appFlavor = Flavor.seedproduction;
+            //   } else if (title == "Research and Development") {
+            //   F.appFlavor = Flavor.seedproduction;
+            //   } else if(title == "Extension Services") {
+            //    //// agri promoter
+            //   }
+
+
           child: selectedApp.isNotEmpty
-              ? selectedApp == "FMAN" || selectedApp == "Seed Production"
-              ? procurementApp.App()
+              ? selectedApp == "FMAN" || selectedApp == "Seed Production" || selectedApp == "Value Chain Development(VCD)" || selectedApp == "Research Program for R&D"
+              ? procurementApp.App(is360App: true, useCase: selectedUseCase,)
               : agripromoter.MyApp(isShowLogout: false,)
               : loading
               ? const Center(child: CircularProgressIndicator())
@@ -419,8 +434,7 @@ class _MainScreenState extends State<MainScreen> {
                           child: Theme(
                             data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
                             child: GestureDetector(
-                              onTap: true
-                                  ? () async {
+                              onTap:  () async {
                                 final item = appList[index];
                                 final String userName = item["userName"] ?? "";
                                 final String token = item["Token"] ?? item["token"] ?? "";
@@ -432,36 +446,34 @@ class _MainScreenState extends State<MainScreen> {
                                 await _copyLoginPayload(baseUrl: baseUrl, token: token);
 
                                 setState(() {
-                                  if (title == "FMAN") {
+                                  if (title == "FMAN" || title == "Value Chain Development(VCD)" || title == "Research Program for R&D") {
                                     F.appFlavor = Flavor.procurement;
+
+                                    if(title == "Research Program for R&D") {
+                                      selectedUseCase = "Research Program";
+                                    }  else {
+                                      selectedUseCase = "Procurement";
+                                    }
+
                                   } else if (title == "Seed Production") {
                                     F.appFlavor = Flavor.seedproduction;
+                                    selectedUseCase = "Seed Production";
+                                  } else if(title == "Extension Services") {
+                                    //// agri promoter
                                   }
+
+
                                   selectedApp = title;
                                 });
-                              }
-                                  : isInstalling
-                                  ? null
-                                  : () {
-                                if (isInstalled && !hasUpdate) {
-                                  _handleTap(index);
-                                } else if (!isInstalled) {
-                                  _downloadAndInstallApk(index);
-                                }
-                                // If update is available, prefer explicit Update button
                               },
                               child: Column(
                                 children: [
                                   Row(
                                     children: [
-                                      // if (iconBytes != null && iconBytes.isNotEmpty) ...[
-                                      // ],
-
                                       ClipRRect(
                                         borderRadius: BorderRadius.circular(8),
                                         child: Image.asset("assets/ic_launcher.png", width: 56, height: 56, fit: BoxFit.cover, errorBuilder: (_, __, ___) => const Icon(Icons.apps, size: 56)),
                                       ),
-
                                       Expanded(
                                         child: Text(
                                           title,
@@ -473,39 +485,6 @@ class _MainScreenState extends State<MainScreen> {
                                     ],
                                   ),
                                 ],
-
-                                // leading: iconBytes != null && iconBytes.isNotEmpty
-                                //     ? ClipRRect(
-                                //         borderRadius: BorderRadius.circular(8),
-                                //         child: Image.memory(iconBytes, width: 56, height: 56, fit: BoxFit.cover, errorBuilder: (_, __, ___) => const Icon(Icons.apps, size: 56)),
-                                //       )
-                                //     : const Icon(Icons.apps, size: 48),
-                                // title: Row(
-                                //   children: [
-                                //     Expanded(
-                                //       child: Text(
-                                //         title,
-                                //         style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-                                //         maxLines: 1,
-                                //         overflow: TextOverflow.ellipsis,
-                                //       ),
-                                //     ), // const SizedBox(width: 8),
-                                //     // _statusChip(installed: isInstalled, hasUpdate: hasUpdate),
-                                //   ],
-                                // ),
-                                // subtitle: Text(subtitleText, style: TextStyle(color: subtitleColor)),
-                                // trailing: true
-                                //     ? null
-                                //     : isInstalling
-                                //     ? const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2))
-                                //     : Row(
-                                //         mainAxisSize: MainAxisSize.min,
-                                //         children: [
-                                //           if (!isInstalled) IconButton(icon: const Icon(Icons.download), tooltip: "Install", onPressed: () => _downloadAndInstallApk(index), color: Colors.redAccent),
-                                //           if (isInstalled && hasUpdate) IconButton(icon: const Icon(Icons.system_update), tooltip: "Update", onPressed: () => _downloadAndInstallApk(index), color: Colors.blue),
-                                //           if (isInstalled) IconButton(icon: const Icon(Icons.open_in_new), tooltip: "Open", onPressed: () => _handleTap(index)),
-                                //         ],
-                                //       ),
                               ),
                             ),
                           ),
