@@ -1,3 +1,4 @@
+// login.dart
 import 'package:farmer360/urls.dart';
 import 'package:farmer360/utils/alert_dialog.dart';
 import 'package:farmer360/utils/api_service.dart';
@@ -23,10 +24,10 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void initState() {
-    if (Url.baseUrl == "http://192.168.1.51:8000/api") {
+    if (Url.baseUrl == "https://fmanbkd.farmmobi.com/api") {
       organizationController.text = "1";
-      emailController.text = "dhiraj";
-      passwordController.text = "Admin@2023";
+      emailController.text = "swapnilprocurement";
+      passwordController.text = "Admin@2024";
 
       // emailController.text = "swapnil";
       // passwordController.text = "Admin@2023";
@@ -151,7 +152,7 @@ class _LoginPageState extends State<LoginPage> {
                           child: MaterialButton(
                             onLongPress: () {
                               if (Url.baseUrl ==
-                                  "http://192.168.1.47:8000/api") {
+                                  "http://fmanbkd.farmmobi.com/api") {
                                 TextEditingController controller =
                                     TextEditingController(text: Url.baseUrl);
                                 showDialog(

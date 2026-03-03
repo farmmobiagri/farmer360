@@ -1,3 +1,4 @@
+// main_screen.dart
 import 'dart:convert';
 import 'dart:io';
 
@@ -446,10 +447,10 @@ class _MainScreenState extends State<MainScreen> {
                                 await _copyLoginPayload(baseUrl: baseUrl, token: token);
 
                                 setState(() {
-                                  if (title == "FMAN" || title == "Value Chain Development(VCD)" || title == "Research Program for R&D") {
+                                  if (title == "FMAN" || title == "Value Chain Development(VCD)" || title == "Research Program(R&D)") {
                                     F.appFlavor = Flavor.procurement;
 
-                                    if(title == "Research Program for R&D") {
+                                    if(title == "Research Program(R&D)") {
                                       selectedUseCase = "Research Program";
                                     }  else {
                                       selectedUseCase = "Procurement";
@@ -461,7 +462,6 @@ class _MainScreenState extends State<MainScreen> {
                                   } else if(title == "Extension Services") {
                                     //// agri promoter
                                   }
-
 
                                   selectedApp = title;
                                 });
