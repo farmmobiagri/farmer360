@@ -325,7 +325,7 @@ class _MainScreenState extends State<MainScreen> {
 
 
           child: selectedApp.isNotEmpty
-              ? selectedApp == "FMAN" || selectedApp == "Seed Production" || selectedApp == "Value Chain Development(VCD)" || selectedApp == "Research Program for R&D"
+              ? selectedApp == "FMAN" || selectedApp == "Seed Production" || selectedApp == "Value Chain Development(VCD)" || selectedApp == "Research Program(R&D)"
               ? procurementApp.App(is360App: true, useCase: selectedUseCase,)
               : agripromoter.MyApp(isShowLogout: false,)
               : loading
@@ -446,10 +446,10 @@ class _MainScreenState extends State<MainScreen> {
                                 await _copyLoginPayload(baseUrl: baseUrl, token: token);
 
                                 setState(() {
-                                  if (title == "FMAN" || title == "Value Chain Development(VCD)" || title == "Research Program for R&D") {
+                                  if (title == "FMAN" || title == "Value Chain Development(VCD)" || title == "Research Program(R&D)") {
                                     F.appFlavor = Flavor.procurement;
 
-                                    if(title == "Research Program for R&D") {
+                                    if(title == "Research Program(R&D)") {
                                       selectedUseCase = "Research Program";
                                     }  else {
                                       selectedUseCase = "Procurement";
