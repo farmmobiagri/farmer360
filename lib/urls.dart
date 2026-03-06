@@ -4,8 +4,8 @@ class Url {
 
   //http://13.200.231.209:8000
   // static String baseUrl = "http://13.200.231.209:8000/api";
-  // static String baseUrl = "https://devfmanapi.farmmobi.com/api";
-  static String baseUrl = "https://fmanbkd.farmmobi.com/api";
+  static String baseUrl = "https://devfmanapi.farmmobi.com/api";
+  // static String baseUrl = "https://fmanbkd.farmmobi.com/api";
 
   // http://127.0.0.1:8000/api/tokenNew/?userId=90
   // https://teams.microsoft.com/l/message/19:meeting_YzM4Yzc2NTYtMjBkMy00MzRhLTg3YzktYzBkNTg4OGRhMTI0@thread.v2/1756353615565?context=%7B%22contextType%22%3A%22chat%22%7D
@@ -24,6 +24,7 @@ class Url {
       "$baseUrl/marketIntelligenceGathering/";
   static String getMaster = "$baseUrl/getAgriPromoterMaster/";
   static String resendOtp = "$baseUrl/resendOtp/";
+  static String savefcmtoken = "$baseUrl/savefcmtoken/";
   static String agriFarmInspection = "$baseUrl/agriFarmInspection/";
   static String agriCropCutDetail = "$baseUrl/agriCropCutDetail/";
   static String hubSales = "$baseUrl/hubSales/";

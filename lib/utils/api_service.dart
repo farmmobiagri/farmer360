@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:farmer360/main_screen.dart';
 import 'package:farmer360/otp.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -76,7 +77,9 @@ class ApiService {
         if (data["userId"] != null) {
           prefs.setString("userId", data["userId"].toString());
           prefs.setString("userData", jsonEncode(data));
+          String? token = await FirebaseMessaging.instance.getToken();
 
+          await savefcmtoken(context, {"userId": data["userId"].toString(), "token" : token});
           Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
@@ -100,6 +103,24 @@ class ApiService {
       var response = await http.post(
         Uri.parse(url),
         body: {"id": id},
+      );
+      if (response.statusCode == 200) {
+        body = jsonDecode(response.body);
+      } else {
+        handleResponse(context, response);
+      }
+    } catch (e) {
+      alertMessage(context, e.toString());
+    }
+    return body;
+  }
+
+  static Future savefcmtoken(context, body) async {
+    try {
+      String url = Url.savefcmtoken;
+      var response = await http.post(
+        Uri.parse(url),
+        body: body,
       );
       if (response.statusCode == 200) {
         body = jsonDecode(response.body);

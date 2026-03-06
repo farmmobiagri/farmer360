@@ -41,53 +41,47 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyAJBsZylY9nH_f_PbCqGmw-1iSRM0oroVY',
-    appId: '1:732261515411:web:721f546f616ad070e74d66',
-    messagingSenderId: '732261515411',
-    projectId: 'procurement-bd262',
-    authDomain: 'procurement-bd262.firebaseapp.com',
-    databaseURL: 'https://procurement-bd262-default-rtdb.firebaseio.com',
-    storageBucket: 'procurement-bd262.firebasestorage.app',
-    measurementId: 'G-0PTFVED7B4',
+    apiKey: 'AIzaSyATCSbRrugK987884cBtYrtZwZKO_GRa58',
+    appId: '1:1051553601344:web:70df4970af8ac53c3c0ca5',
+    messagingSenderId: '1051553601344',
+    projectId: 'farmmobimarket',
+    authDomain: 'farmmobimarket.firebaseapp.com',
+    storageBucket: 'farmmobimarket.firebasestorage.app',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAwtMUk6WqASqu08YlH5E82iHbHcBcGpl4',
-    appId: '1:732261515411:android:e137dfe1e764ac45e74d66',
-    messagingSenderId: '732261515411',
-    projectId: 'procurement-bd262',
-    databaseURL: 'https://procurement-bd262-default-rtdb.firebaseio.com',
-    storageBucket: 'procurement-bd262.firebasestorage.app',
+    apiKey: 'AIzaSyCy_QVL8zSXJzqvFiH3aa5sWG_D_GnWQQk',
+    appId: '1:1051553601344:android:f192da7b5137deb23c0ca5',
+    messagingSenderId: '1051553601344',
+    projectId: 'farmmobimarket',
+    storageBucket: 'farmmobimarket.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyA5yDzoX8_WL1DiF29zRD-T88D3ZBnKa54',
-    appId: '1:732261515411:ios:92c0d2c8c81a9469e74d66',
-    messagingSenderId: '732261515411',
-    projectId: 'procurement-bd262',
-    databaseURL: 'https://procurement-bd262-default-rtdb.firebaseio.com',
-    storageBucket: 'procurement-bd262.firebasestorage.app',
+    apiKey: 'AIzaSyAZcSU2qqg9NJi1nujJXnqVALd73yPL0Uw',
+    appId: '1:1051553601344:ios:5a6e4556abc4f63f3c0ca5',
+    messagingSenderId: '1051553601344',
+    projectId: 'farmmobimarket',
+    storageBucket: 'farmmobimarket.firebasestorage.app',
     iosBundleId: 'com.farmmobi.farmer360',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyA5yDzoX8_WL1DiF29zRD-T88D3ZBnKa54',
-    appId: '1:732261515411:ios:92c0d2c8c81a9469e74d66',
-    messagingSenderId: '732261515411',
-    projectId: 'procurement-bd262',
-    databaseURL: 'https://procurement-bd262-default-rtdb.firebaseio.com',
-    storageBucket: 'procurement-bd262.firebasestorage.app',
+    apiKey: 'AIzaSyAZcSU2qqg9NJi1nujJXnqVALd73yPL0Uw',
+    appId: '1:1051553601344:ios:5a6e4556abc4f63f3c0ca5',
+    messagingSenderId: '1051553601344',
+    projectId: 'farmmobimarket',
+    storageBucket: 'farmmobimarket.firebasestorage.app',
     iosBundleId: 'com.farmmobi.farmer360',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyAJBsZylY9nH_f_PbCqGmw-1iSRM0oroVY',
-    appId: '1:732261515411:web:ff19009cd14ff0ade74d66',
-    messagingSenderId: '732261515411',
-    projectId: 'procurement-bd262',
-    authDomain: 'procurement-bd262.firebaseapp.com',
-    databaseURL: 'https://procurement-bd262-default-rtdb.firebaseio.com',
-    storageBucket: 'procurement-bd262.firebasestorage.app',
-    measurementId: 'G-7NYPRP2DYV',
+    apiKey: 'AIzaSyATCSbRrugK987884cBtYrtZwZKO_GRa58',
+    appId: '1:1051553601344:web:1b8429b3732fb5f83c0ca5',
+    messagingSenderId: '1051553601344',
+    projectId: 'farmmobimarket',
+    authDomain: 'farmmobimarket.firebaseapp.com',
+    storageBucket: 'farmmobimarket.firebasestorage.app',
   );
+
 }
