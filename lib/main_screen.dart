@@ -5,8 +5,10 @@ import 'package:agripromoter/main.dart' as agripromoter;
 import 'package:android_intent_plus/android_intent.dart';
 import 'package:farmer360/login.dart';
 import 'package:farmer360/utils/api_service.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:installed_apps/app_info.dart';
 import 'package:installed_apps/installed_apps.dart';
 import 'package:ota_update/ota_update.dart';
@@ -99,6 +101,7 @@ class _MainScreenState extends State<MainScreen> {
         });
       }
     }
+    await initLocalNotifications();
   }
 
   Version? _parseVersion(String? v) {
@@ -170,6 +173,53 @@ class _MainScreenState extends State<MainScreen> {
         });
       }
     }
+  }
+
+
+  void setupFirebaseMessaging() {
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      if (message.notification != null) {
+        showLocalNotification(
+          message.notification!.title,
+          message.notification!.body,
+        );
+      }
+    });
+  }
+
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+  FlutterLocalNotificationsPlugin();
+
+  Future<void> initLocalNotifications() async {
+    const AndroidInitializationSettings androidSettings =
+    AndroidInitializationSettings('@mipmap/ic_launcher');
+
+    const InitializationSettings settings =
+    InitializationSettings(android: androidSettings);
+
+    await flutterLocalNotificationsPlugin.initialize(settings);
+    setupFirebaseMessaging();
+
+  }
+
+  Future<void> showLocalNotification(String? title, String? body) async {
+    const AndroidNotificationDetails androidDetails =
+    AndroidNotificationDetails(
+      'channel_id',
+      'channel_name',
+      importance: Importance.max,
+      priority: Priority.high,
+    );
+
+    const NotificationDetails notificationDetails =
+    NotificationDetails(android: androidDetails);
+
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      title,
+      body,
+      notificationDetails,
+    );
   }
 
   Future<void> _launchWithCredentials({required String packageName, required String userName, required String token, Map<String, String>? deepLinkParts}) async {
