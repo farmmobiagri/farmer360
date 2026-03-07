@@ -326,7 +326,7 @@ class _MainScreenState extends State<MainScreen> {
 
 
           child: selectedApp.isNotEmpty
-              ? selectedApp == "FMAN" || selectedApp == "Seed Production" || selectedApp == "Value Chain Development(VCD)" || selectedApp == "Research Program for R&D"
+              ? selectedApp == "FMAN" || selectedApp == "Seed Production" || selectedApp == "Value Chain Development(VCD)" || selectedApp == "Research Program(R&D)"
               ? procurementApp.App(is360App: true, useCase: selectedUseCase,)
               : agripromoter.MyApp(isShowLogout: false,)
               : loading

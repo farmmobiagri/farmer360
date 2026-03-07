@@ -24,7 +24,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void initState() {
-    if (Url.baseUrl == "https://fmanbkd.farmmobi.com/api") {
+    if (Url.baseUrl == "https://devfmanapi.farmmobi.com/api") {
       organizationController.text = "1";
       emailController.text = "swapnilprocurement";
       passwordController.text = "Admin@2024";
@@ -152,7 +152,7 @@ class _LoginPageState extends State<LoginPage> {
                           child: MaterialButton(
                             onLongPress: () {
                               if (Url.baseUrl ==
-                                  "http://fmanbkd.farmmobi.com/api") {
+                                  "http://devfmanapi.farmmobi.com/api") {
                                 TextEditingController controller =
                                     TextEditingController(text: Url.baseUrl);
                                 showDialog(
