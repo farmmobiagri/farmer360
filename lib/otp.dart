@@ -1,4 +1,5 @@
 import 'package:farmer360/utils/api_service.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -212,10 +213,14 @@ class _OtpPageState extends State<OtpPage> {
         isApiCalled = true;
       });
 
+      String? token = await FirebaseMessaging.instance.getToken();
+
       await ApiService.verifyOtp(context,widget.prefs, {
         "email": loginResponse["email"].toString(),
         "otp": otpController.text,
-        "id": loginResponse["id"].toString()
+        "id": loginResponse["id"].toString(),
+        "fcmToken":token,
+        // "androidId"
       });
 
       setState(() {
